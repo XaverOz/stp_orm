@@ -60,3 +60,30 @@ public class Main {
 
     }
 }
+
+
+/*
+<mapping class="entity.House"/>
+        <mapping class="entity.Room"/>
+        <mapping class="entity.Sensor"/>
+        <mapping class="entity.Value"/>
+        
+        houses.get_content("from House", entity.House.class);
+        
+        //1
+        session.createQuery("from House").list();
+
+            //2
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<House> cr = cb.createQuery(House.class);
+            Root<House> root = cr.from(House.class);
+            cr.select(root);
+            Query<House> query = session.createQuery(cr);
+            List<House> results = query.getResultList();
+
+            //3
+            session.createCriteria(House.class).list();
+
+            //4
+            session.createNativeQuery("select * from House");
+*/*
