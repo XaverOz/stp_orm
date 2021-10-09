@@ -63,17 +63,22 @@ public class Main {
 
 
 /*
+При работе с HQL возникли проблемы для исправления надо:
+1) использовать full class name в конфиге
+2) использовать full class name при получении
 <mapping class="entity.House"/>
         <mapping class="entity.Room"/>
         <mapping class="entity.Sensor"/>
         <mapping class="entity.Value"/>
-        
+        // получали через класс посредник
         houses.get_content("from House", entity.House.class);
         
-        //1
+здесь я отобразил основные типы API для работы с таблицами в Hibernate
+        
+        //1 HQL
         session.createQuery("from House").list();
 
-            //2
+            //2 JPA Criteria API
             CriteriaBuilder cb = session.getCriteriaBuilder();
             CriteriaQuery<House> cr = cb.createQuery(House.class);
             Root<House> root = cr.from(House.class);
@@ -81,9 +86,9 @@ public class Main {
             Query<House> query = session.createQuery(cr);
             List<House> results = query.getResultList();
 
-            //3
+            //3 Hibernate Criteria API
             session.createCriteria(House.class).list();
 
-            //4
+            //4 native queries
             session.createNativeQuery("select * from House");
 */*
