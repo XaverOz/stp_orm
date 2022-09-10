@@ -1,5 +1,6 @@
 package main;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
@@ -7,7 +8,11 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.criterion.CriteriaQuery;
+import org.hibernate.criterion.Restrictions;
 
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 
@@ -32,32 +37,42 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Car car = new Car();
-        car.setColor("red");
-        car.setName("LADA 2110");
         Transaction transaction = null;
         System.out.println("Выберите действие");
         System.out.println("1 просмотр");
         System.out.println("2 редактирование");
         System.out.println("3 удаление");
         System.out.println("4 добавление");
+        System.out.println("5 выход");
         Scanner keyboard = new Scanner(System.in);
-        int myint = keyboard.nextInt();
-        if(myint == 4) {
-            try (Session session = createSessionFactory().openSession()) {
-                transaction = session.beginTransaction();
-                session.persist(car);
-                transaction.commit();
-                System.out.println("добавление успешно");
-            } catch (Exception e) {
-                if (transaction != null) {
-                    transaction.rollback();
+        Random rn = new Random();
+        try (Session session = createSessionFactory().openSession()) {
+            while (true) {
+                int myint = keyboard.nextInt();
+                if (myint == 4) {
+                    transaction = session.beginTransaction();
+                    Car car = new Car();
+                    car.setColor("red");
+                    car.setName("LADA 211"+ rn.nextInt());
+                    session.persist(car);
+                    transaction.commit();
+                    System.out.println("добавление успешно");
+                } else if (myint == 1) {
+                    List<Car> cars = session.createCriteria(Car.class).add(Restrictions.ge("id", 1L)).list();
+                    for (Car carV : cars) {
+                        System.out.println(carV);
+                    }
                 }
-                e.printStackTrace();
+                if (myint == 5) {
+                    return;
+                }
             }
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
-
-
     }
 }
 
@@ -91,4 +106,4 @@ public class Main {
 
             //4 native queries
             session.createNativeQuery("select * from House");
-*/*
+*/
